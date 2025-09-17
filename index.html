@@ -1,0 +1,1891 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Солнечная микрогенерация — комплекты и подключение | АО «Россети Кубань»</title>
+
+<!-- Шрифты -->
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+
+<!-- EmailJS SDK -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script type="text/javascript">
+  // ИНСТРУКЦИЯ ПО НАСТРОЙКЕ АВТОМАТИЧЕСКОЙ ОТПРАВКИ EMAIL:
+  
+  // ВАРИАНТ 1: EmailJS (рекомендуется, бесплатно до 200 писем/месяц)
+  // 1. Зарегистрируйтесь на https://www.emailjs.com/
+  // 2. Создайте Email Service (Gmail, Outlook или другой)
+  // 3. Создайте Email Template со следующими переменными:
+  //    {{to_email}}, {{from_name}}, {{from_email}}, {{phone}}, 
+  //    {{address}}, {{pack_type}}, {{comment}}, {{date}}
+  // 4. Скопируйте ваш Public Key, Service ID и Template ID
+  // 5. Вставьте их в код ниже
+  
+  // ВАРИАНТ 2: Google Apps Script (полностью бесплатно)
+  // Код для Google Apps Script приведен в конце этого файла
+  
+  (function(){
+    // Замените на ваш Public Key из EmailJS
+    emailjs.init("YOUR_PUBLIC_KEY");
+  })();
+</script>
+
+<style>
+  /* ===== Брендовые токены (Россети) ===== */
+  :root{
+    /* Официальные цвета Россети */
+    --rs-blue:#0033A0;         /* Основной синий Россети */
+    --rs-blue-dark:#002170;    /* Темный синий */
+    --rs-blue-600:#0A47C6;
+    --rs-accent:#00AEEF;       /* Акцент голубой */
+    --rs-green:#78BE20;        /* Зеленый (энергия) */
+    --rs-orange:#FF6900;       /* Оранжевый (солнце) */
+    
+    /* UI цвета */
+    --ink:#0b1a2b;
+    --muted:#5f6b7a;
+    --bg:#f4f7fb;
+    --card:#ffffff;
+    --border:#e6edf6;
+    --ok:#0a7a2d;
+    --warn:#b36b00;
+    --bad:#b00020;
+
+    /* Геометрия и тени */
+    --radius:16px;
+    --radius-sm:12px;
+    --radius-lg:22px;
+    --shadow:0 10px 30px rgba(0,0,0,.08);
+    --shadow-hover:0 20px 40px rgba(0,0,0,.12);
+    --maxw:1200px;
+    
+    /* Анимации */
+    --ease-out:cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out:cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(0,51,160,.08), transparent 60%),
+      radial-gradient(900px 500px at 10% -10%, rgba(0,174,239,.10), transparent 60%),
+      linear-gradient(180deg,#f6f9ff 0%, #f4f7fb 60%, #eef3fb 100%);
+    -webkit-font-smoothing:antialiased; 
+    -moz-osx-font-smoothing:grayscale;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none;transition:color .2s}
+  a:hover{color:var(--rs-blue)}
+  img{max-width:100%;display:block}
+
+  /* ===== Прогресс-индикатор ===== */
+  .scrollbar{
+    position:fixed; top:0; left:0; height:3px; width:0%;
+    background:linear-gradient(90deg,var(--rs-accent),var(--rs-blue),var(--rs-green));
+    z-index:1100;
+    transition:width .1s var(--ease-out);
+  }
+
+  /* ===== Хедер с улучшенным дизайном ===== */
+  header{
+    position:sticky; top:0; z-index:1000;
+    backdrop-filter:saturate(180%) blur(20px);
+    background:linear-gradient(90deg, rgba(255,255,255,.92), rgba(255,255,255,.88));
+    border-bottom:1px solid var(--border);
+    box-shadow:0 2px 10px rgba(0,0,0,.03);
+  }
+  .nav{
+    max-width:var(--maxw); margin:auto; padding:12px 20px;
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+  }
+  .logo{display:flex; align-items:center; gap:12px; font-family:Montserrat,Inter; font-weight:800; color:var(--rs-blue)}
+  .mark{
+    width:36px; height:36px; border-radius:50%;
+    background:conic-gradient(from 0deg,var(--rs-blue),var(--rs-blue-600),var(--rs-accent),var(--rs-blue));
+    box-shadow:inset 0 0 0 4px #fff, 0 6px 16px rgba(0,0,0,.08);
+    animation:rotate 20s linear infinite;
+  }
+  @keyframes rotate{to{transform:rotate(360deg)}}
+  
+  .navlinks{display:flex; gap:20px; align-items:center; flex-wrap:wrap}
+  .nav a{font-weight:600; color:#223049; opacity:.9; position:relative}
+  .navlinks a::after{
+    content:''; position:absolute; bottom:-2px; left:0; right:0; height:2px;
+    background:var(--rs-blue); transform:scaleX(0); transition:.3s transform var(--ease-out);
+  }
+  .navlinks a:hover::after{transform:scaleX(1)}
+  
+  /* Улучшенные кнопки */
+  .cta{
+    padding:10px 20px; border-radius:999px; border:1px solid transparent;
+    background:linear-gradient(135deg,var(--rs-blue),var(--rs-blue-600));
+    color:#fff; font-weight:800; 
+    box-shadow:0 6px 20px rgba(10,71,198,.25), inset 0 1px 0 rgba(255,255,255,.1);
+    transition:all .3s var(--ease-out);
+    display:inline-flex; align-items:center; gap:8px;
+    position:relative; overflow:hidden;
+  }
+  .cta::before{
+    content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
+    transition:.5s;
+  }
+  .cta:hover{
+    transform:translateY(-2px); 
+    box-shadow:0 10px 30px rgba(10,71,198,.35), inset 0 1px 0 rgba(255,255,255,.2);
+  }
+  .cta:hover::before{left:100%}
+  
+  .ghost{
+    padding:10px 16px; border-radius:999px; border:1px solid var(--border); 
+    background:#fff; font-weight:700;
+    transition:all .3s var(--ease-out);
+  }
+  .ghost:hover{
+    border-color:var(--rs-blue); 
+    background:rgba(0,51,160,.04);
+    transform:translateY(-1px);
+  }
+
+  /* ===== Мобильное меню ===== */
+  .menu-toggle{
+    display:none; width:32px; height:32px; 
+    background:transparent; border:none; cursor:pointer;
+    position:relative; z-index:1100;
+  }
+  .menu-toggle span{
+    display:block; width:22px; height:2px; background:var(--rs-blue);
+    position:absolute; left:50%; transform:translateX(-50%);
+    transition:.3s;
+  }
+  .menu-toggle span:nth-child(1){top:8px}
+  .menu-toggle span:nth-child(2){top:15px}
+  .menu-toggle span:nth-child(3){bottom:8px}
+  .menu-toggle.active span:nth-child(1){transform:translateX(-50%) rotate(45deg); top:15px}
+  .menu-toggle.active span:nth-child(2){opacity:0}
+  .menu-toggle.active span:nth-child(3){transform:translateX(-50%) rotate(-45deg); bottom:15px}
+
+  /* ===== Hero с анимациями ===== */
+  .hero{position:relative; overflow:hidden; border-bottom:1px solid var(--border)}
+  .hero .wrap{
+    max-width:var(--maxw); margin:auto; padding:60px 20px 30px; 
+    display:grid; grid-template-columns:1.1fr .9fr; gap:32px;
+  }
+  
+  /* Плавающие элементы фона */
+  .float-el{
+    position:absolute; border-radius:50%; 
+    background:radial-gradient(circle, var(--rs-accent), transparent 70%);
+    opacity:.1; animation:float 20s infinite ease-in-out;
+  }
+  .float-el:nth-child(1){width:300px; height:300px; top:-100px; left:-50px; animation-duration:25s}
+  .float-el:nth-child(2){width:200px; height:200px; bottom:-50px; right:10%; animation-duration:30s; animation-delay:5s}
+  @keyframes float{
+    0%,100%{transform:translateY(0) rotate(0deg)}
+    50%{transform:translateY(-20px) rotate(180deg)}
+  }
+  
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    background:linear-gradient(135deg, rgba(0,174,239,.15), rgba(120,190,32,.10));
+    color:var(--rs-blue);
+    padding:8px 14px; border-radius:999px; font-weight:800; font-size:12px; 
+    letter-spacing:.35px; text-transform:uppercase;
+    animation:slideDown .6s var(--ease-out);
+  }
+  @keyframes slideDown{
+    from{opacity:0; transform:translateY(-20px)}
+    to{opacity:1; transform:translateY(0)}
+  }
+  
+  h1{
+    font-family:Montserrat,Inter; font-weight:800; line-height:1.05;
+    font-size:clamp(32px,4.5vw,52px); margin:16px 0 12px; 
+    background:linear-gradient(135deg, var(--rs-blue), var(--rs-blue-600));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    animation:slideUp .6s .1s var(--ease-out) both;
+  }
+  @keyframes slideUp{
+    from{opacity:0; transform:translateY(20px)}
+    to{opacity:1; transform:translateY(0)}
+  }
+  
+  .lead{
+    font-size:clamp(17px,2vw,20px); color:#243042; opacity:.95; 
+    max-width:62ch; line-height:1.6;
+    animation:slideUp .6s .2s var(--ease-out) both;
+  }
+  
+  .hero-cards{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:24px;
+    animation:slideUp .6s .3s var(--ease-out) both;
+  }
+  .stat{
+    background:linear-gradient(180deg,#fff,#f7fbff);
+    border:1px solid var(--border); border-radius:var(--radius); 
+    padding:18px; box-shadow:var(--shadow);
+    display:flex; align-items:center; gap:14px; 
+    transition:all .3s var(--ease-out);
+    cursor:default;
+  }
+  .stat:hover{
+    transform:translateY(-4px);
+    box-shadow:var(--shadow-hover);
+    border-color:rgba(0,51,160,.15);
+  }
+  .stat .icon{font-size:28px; filter:drop-shadow(0 2px 4px rgba(0,0,0,.1))}
+  .stat strong{font-size:24px; color:var(--rs-blue)}
+  .stat .label{font-size:13px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px}
+  
+  /* Интерактивная иллюстрация */
+  .illus{
+    align-self:center; justify-self:center; 
+    width:min(520px,95%); aspect-ratio:1.1;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(120,190,32,.08), transparent 50%),
+      radial-gradient(600px 260px at 50% -10%, rgba(10,71,198,.20), transparent 55%),
+      linear-gradient(145deg, rgba(255,255,255,.92), rgba(255,255,255,.66));
+    border:1px solid var(--border); border-radius:24px; 
+    box-shadow:0 30px 60px rgba(0,0,0,.12), inset 0 0 0 1px rgba(255,255,255,.6);
+    position:relative; overflow:hidden;
+    animation:slideUp .6s .4s var(--ease-out) both;
+  }
+  .illus::before{
+    content:''; position:absolute; inset:0;
+    background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%230033A0' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity:.5;
+  }
+  
+  .chip{
+    position:absolute; 
+    background:#fff; border:1px solid var(--border); border-radius:14px; 
+    padding:10px 14px; box-shadow:var(--shadow); 
+    font-weight:800; color:var(--rs-blue-600);
+    cursor:pointer; transition:all .3s var(--ease-out);
+  }
+  .chip:hover{transform:translateY(-2px) scale(1.05); box-shadow:var(--shadow-hover)}
+  .chip .emoji{font-size:18px; margin-right:6px}
+  .chip:nth-child(1){left:8%; top:10%; animation:float 4s infinite ease-in-out}
+  .chip:nth-child(2){left:auto; right:6%; top:20%; animation:float 4s .5s infinite ease-in-out}
+  .chip:nth-child(3){left:12%; bottom:15%; top:auto; animation:float 4s 1s infinite ease-in-out}
+  .chip:nth-child(4){right:8%; bottom:10%; top:auto; animation:float 4s 1.5s infinite ease-in-out}
+
+  /* Солнечная панель в центре иллюстрации */
+  .solar-panel{
+    position:absolute; left:50%; top:50%; 
+    transform:translate(-50%,-50%) perspective(800px) rotateX(25deg);
+    width:200px; height:140px;
+    background:linear-gradient(135deg,#1a237e,#283593);
+    border-radius:8px; box-shadow:0 20px 40px rgba(0,0,0,.2);
+    display:grid; grid-template-columns:repeat(5,1fr); grid-template-rows:repeat(3,1fr);
+    gap:2px; padding:8px;
+  }
+  .solar-cell{
+    background:linear-gradient(135deg,#3949ab,#5c6bc0);
+    border-radius:2px;
+  }
+
+  .wave{display:block; width:100%; height:auto; margin-top:-1px}
+
+  /* ===== Секции ===== */
+  section{max-width:var(--maxw); margin:0 auto; padding:60px 20px}
+  h2{
+    font-family:Montserrat,Inter; font-weight:800; color:#0b1a2b; 
+    margin:0 0 16px; font-size:clamp(26px,3.5vw,36px);
+    position:relative; display:inline-block;
+  }
+  h2::after{
+    content:''; position:absolute; bottom:-8px; left:0; 
+    width:60px; height:4px; background:linear-gradient(90deg,var(--rs-blue),var(--rs-accent));
+    border-radius:2px;
+  }
+  .sub{color:var(--muted); margin-top:-6px; margin-bottom:24px; font-size:17px; line-height:1.5}
+  
+  .grid{display:grid; gap:20px}
+  .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+  .grid.cols-2{grid-template-columns:repeat(2,1fr)}
+  
+  .card{
+    background:#fff; border:1px solid var(--border); 
+    border-radius:var(--radius); box-shadow:var(--shadow); 
+    padding:24px; transform:translateY(8px); opacity:0; 
+    transition:all .5s var(--ease-out);
+    position:relative; overflow:hidden;
+  }
+  .card::before{
+    content:''; position:absolute; top:0; left:0; right:0; height:3px;
+    background:linear-gradient(90deg,var(--rs-blue),var(--rs-accent),var(--rs-green));
+    transform:scaleX(0); transition:.4s transform var(--ease-out);
+  }
+  .card:hover::before{transform:scaleX(1)}
+  .card._in{transform:none; opacity:1}
+
+  /* ===== Преимущества ===== */
+  .benefit{display:flex; gap:16px; align-items:flex-start}
+  .icon{
+    width:48px; height:48px; border-radius:12px; display:grid; place-items:center;
+    background:linear-gradient(135deg,#eaf4ff,#ffffff); 
+    border:1px solid var(--border);
+    box-shadow:inset 0 0 0 6px rgba(0,51,160,.05), 0 4px 12px rgba(0,51,160,.08); 
+    flex:0 0 48px; font-size:24px;
+    transition:all .3s var(--ease-out);
+  }
+  .benefit:hover .icon{
+    transform:translateY(-2px) rotate(5deg);
+    box-shadow:inset 0 0 0 6px rgba(0,51,160,.08), 0 8px 20px rgba(0,51,160,.15);
+  }
+  .benefit h3{margin:0 0 8px; font-size:18px; color:var(--rs-blue)}
+  .benefit p{margin:0; color:#2a3645; opacity:.9; line-height:1.5}
+
+  /* ===== Улучшенные табы ===== */
+  .tabs{
+    display:flex; gap:8px; flex-wrap:wrap; margin:16px 0 24px;
+    background:rgba(0,0,0,.02); padding:6px; border-radius:999px;
+  }
+  .tab{
+    padding:12px 20px; border-radius:999px; border:none; 
+    background:transparent; font-weight:800; color:#243042; 
+    cursor:pointer; transition:all .3s var(--ease-out);
+    position:relative;
+  }
+  .tab:hover{color:var(--rs-blue)}
+  .tab.active{
+    background:linear-gradient(135deg,#ffffff,#f0f7ff); 
+    color:var(--rs-blue); 
+    box-shadow:0 4px 12px rgba(0,51,160,.15);
+  }
+
+  /* ===== Карточки комплектов ===== */
+  .pack{position:relative; cursor:pointer}
+  .pack:hover{transform:translateY(-6px); box-shadow:0 20px 40px rgba(0,0,0,.12)}
+  .badge{
+    display:inline-block; padding:6px 12px; border-radius:20px;
+    background:linear-gradient(135deg,var(--rs-blue),var(--rs-blue-600));
+    color:#fff; font-size:12px; font-weight:700; text-transform:uppercase;
+    letter-spacing:.5px; margin-bottom:12px;
+  }
+  .title{font-size:20px; font-weight:800; color:var(--rs-blue); margin-bottom:8px}
+  .price{
+    font-size:32px; font-weight:800; 
+    background:linear-gradient(135deg,var(--rs-blue),var(--rs-green));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    margin:12px 0;
+  }
+  .list{display:grid; gap:12px; margin:16px 0}
+  .list li{display:flex; align-items:flex-start; gap:10px}
+  .check{
+    width:24px; height:24px; border-radius:8px; 
+    display:grid; place-items:center; flex:0 0 24px;
+    background:linear-gradient(135deg,#eafff3,#ffffff); 
+    border:1px solid #d8efe2; color:var(--ok); font-weight:700;
+    box-shadow:inset 0 0 0 4px rgba(10,122,45,.05);
+  }
+  
+  /* ===== Улучшенный калькулятор ===== */
+  .calc{display:grid; grid-template-columns:1.2fr 1fr; gap:24px}
+  .field{display:grid; gap:8px}
+  .field label{font-weight:700; color:#243042; display:flex; align-items:center; gap:8px}
+  .input,select{
+    width:100%; padding:12px 16px; border-radius:12px; 
+    border:1px solid var(--border); background:#fff; 
+    font:inherit; transition:all .3s;
+  }
+  .input:hover,select:hover{border-color:rgba(0,51,160,.2)}
+  .input:focus,select:focus{
+    outline:none; border-color:var(--rs-blue); 
+    box-shadow:0 0 0 3px rgba(0,51,160,.1);
+  }
+  
+  /* Range слайдер */
+  input[type="range"]{
+    -webkit-appearance:none; appearance:none;
+    background:transparent; cursor:pointer;
+  }
+  input[type="range"]::-webkit-slider-track{
+    background:var(--border); height:6px; border-radius:3px;
+  }
+  input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none;
+    width:20px; height:20px; border-radius:50%;
+    background:linear-gradient(135deg,var(--rs-blue),var(--rs-blue-600));
+    box-shadow:0 2px 8px rgba(0,51,160,.3);
+    margin-top:-7px; transition:.2s;
+  }
+  input[type="range"]:hover::-webkit-slider-thumb{
+    transform:scale(1.2); box-shadow:0 4px 12px rgba(0,51,160,.4);
+  }
+  
+  .range-value{
+    display:inline-block; padding:4px 8px; border-radius:6px;
+    background:rgba(0,51,160,.08); color:var(--rs-blue);
+    font-weight:700; font-size:14px; margin-left:8px;
+  }
+  
+  /* Результаты калькулятора */
+  .calcout{display:grid; gap:12px}
+  .kpi{
+    display:flex; justify-content:space-between; align-items:center; 
+    padding:16px 18px; border:1px solid var(--border); 
+    border-radius:12px; background:linear-gradient(180deg,#fff,#f7fbff);
+    transition:all .3s;
+  }
+  .kpi:hover{transform:translateX(4px); box-shadow:0 4px 12px rgba(0,51,160,.08)}
+  .kpi strong{font-size:22px; color:var(--rs-blue-600)}
+  .kpi.highlight{
+    background:linear-gradient(135deg,rgba(0,51,160,.04),rgba(0,174,239,.04));
+    border-color:rgba(0,51,160,.2);
+  }
+
+  /* ===== Процесс с таймлайном ===== */
+  .timeline{position:relative; padding-left:40px}
+  .timeline::before{
+    content:''; position:absolute; left:15px; top:0; bottom:0; width:2px;
+    background:linear-gradient(180deg,var(--rs-blue),var(--rs-accent),var(--rs-green));
+  }
+  .timeline-item{
+    position:relative; padding-bottom:32px; opacity:0; 
+    transform:translateX(-20px); transition:all .6s var(--ease-out);
+  }
+  .timeline-item._in{opacity:1; transform:translateX(0)}
+  .timeline-item:last-child{padding-bottom:0}
+  
+  .timeline-dot{
+    position:absolute; left:-25px; top:8px;
+    width:16px; height:16px; border-radius:50%;
+    background:linear-gradient(135deg,var(--rs-blue),var(--rs-accent));
+    border:3px solid #fff; box-shadow:0 0 0 4px rgba(0,51,160,.1);
+    z-index:1; transition:all .3s;
+  }
+  .timeline-item:hover .timeline-dot{
+    transform:scale(1.3); box-shadow:0 0 0 6px rgba(0,51,160,.15);
+  }
+  
+  .timeline-content{
+    background:#fff; border:1px solid var(--border); 
+    border-radius:var(--radius); padding:18px; box-shadow:var(--shadow);
+    transition:all .3s;
+  }
+  .timeline-content:hover{box-shadow:var(--shadow-hover)}
+  .timeline-title{font-weight:800; color:var(--rs-blue); margin-bottom:6px}
+  .timeline-desc{color:#243042; opacity:.9}
+
+  /* ===== FAQ с анимацией ===== */
+  details{
+    border:1px solid var(--border); border-radius:12px; 
+    background:#fff; box-shadow:var(--shadow); 
+    margin-bottom:12px; transition:all .3s;
+  }
+  details:hover{box-shadow:var(--shadow-hover)}
+  summary{
+    cursor:pointer; list-style:none; padding:16px 20px; 
+    font-weight:800; display:flex; justify-content:space-between;
+    align-items:center; transition:.3s;
+  }
+  summary::after{
+    content:'+'; font-size:20px; color:var(--rs-blue);
+    transition:.3s transform;
+  }
+  details[open] summary::after{transform:rotate(45deg)}
+  details[open] summary{border-bottom:1px solid var(--border)}
+  details .ans{padding:16px 20px; color:#263345; line-height:1.6}
+
+  /* ===== Форма ===== */
+  form{display:grid; gap:16px}
+  .formgrid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px}
+  textarea.input{min-height:120px; resize:vertical}
+  .consent{
+    display:flex; gap:12px; align-items:flex-start; 
+    color:#3a4657; font-size:14px; line-height:1.4;
+  }
+  .checkbox{
+    width:20px; height:20px; border-radius:4px; 
+    border:2px solid var(--border); background:#fff;
+    appearance:none; cursor:pointer; transition:.3s;
+    flex:0 0 20px; margin-top:1px;
+  }
+  .checkbox:checked{
+    background:linear-gradient(135deg,var(--rs-blue),var(--rs-blue-600));
+    border-color:var(--rs-blue);
+  }
+  .checkbox:checked::after{
+    content:'✓'; color:#fff; display:block; text-align:center;
+    line-height:16px; font-weight:700;
+  }
+
+  /* ===== Футер ===== */
+  footer{
+    padding:40px 20px 60px; border-top:1px solid var(--border); 
+    background:linear-gradient(180deg,#ffffffcc,#f8fafc);
+    backdrop-filter:saturate(160%) blur(6px);
+  }
+  .foot{max-width:var(--maxw); margin:0 auto; display:grid; gap:24px}
+  .foot-grid{
+    display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:32px;
+    padding-bottom:24px; border-bottom:1px solid var(--border);
+  }
+  .foot-col h4{font-weight:800; color:var(--rs-blue); margin:0 0 12px}
+  .foot-col a{
+    display:block; padding:4px 0; color:#465367; 
+    transition:.2s; position:relative;
+  }
+  .foot-col a:hover{color:var(--rs-blue); transform:translateX(4px)}
+  .foot-bottom{
+    display:flex; justify-content:space-between; align-items:center; 
+    gap:16px; flex-wrap:wrap; color:var(--muted); font-size:14px;
+  }
+  .social{display:flex; gap:12px}
+  .social a{
+    width:36px; height:36px; border-radius:50%; 
+    background:rgba(0,51,160,.08); color:var(--rs-blue);
+    display:grid; place-items:center; transition:.3s;
+  }
+  .social a:hover{
+    background:linear-gradient(135deg,var(--rs-blue),var(--rs-blue-600));
+    color:#fff; transform:translateY(-2px);
+  }
+
+  /* ===== Мобильная панель ===== */
+  .mbar{
+    display:none; position:fixed; left:0; right:0; bottom:0; z-index:1001;
+    background:linear-gradient(180deg, #ffffffee, #ffffff); 
+    border-top:1px solid var(--border);
+    padding:10px 16px; display:flex; justify-content:space-around; gap:8px;
+    box-shadow:0 -4px 20px rgba(0,0,0,.08);
+  }
+  .mbar a{
+    flex:1; text-align:center; padding:10px 8px; 
+    border-radius:12px; font-weight:700; font-size:14px;
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+    transition:.3s;
+  }
+  .mbar a:hover{background:rgba(0,51,160,.04)}
+  .mbar a.active{color:var(--rs-blue)}
+  .mbar .icon{font-size:20px}
+
+  /* Плавающая кнопка */
+  .floating-cta{
+    position:fixed; right:20px; bottom:90px; z-index:1001;
+    box-shadow:0 20px 40px rgba(0,51,160,.35);
+    padding:14px 24px;
+  }
+
+  /* ===== Всплывающие подсказки ===== */
+  .tooltip{
+    position:relative; cursor:help;
+    border-bottom:1px dashed var(--muted);
+  }
+  .tooltip::after{
+    content:attr(data-tooltip); position:absolute; bottom:100%; left:50%;
+    transform:translateX(-50%) translateY(-8px); opacity:0;
+    background:#243042; color:#fff; padding:8px 12px; border-radius:8px;
+    font-size:13px; white-space:nowrap; pointer-events:none;
+    transition:.3s; z-index:10;
+  }
+  .tooltip:hover::after{opacity:1; transform:translateX(-50%) translateY(-12px)}
+
+  /* ===== Индикатор загрузки ===== */
+  .spinner{
+    display:inline-block; width:20px; height:20px;
+    border:2px solid var(--border); border-radius:50%;
+    border-top-color:var(--rs-blue); animation:spin .6s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ===== Галерея ===== */
+  .gallery{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:16px;
+    margin:24px 0;
+  }
+  .gallery-item{
+    border-radius:12px; overflow:hidden; cursor:pointer;
+    transition:.3s; position:relative; aspect-ratio:4/3;
+  }
+  .gallery-item img{width:100%; height:100%; object-fit:cover}
+  .gallery-item:hover{transform:scale(1.05); box-shadow:var(--shadow-hover)}
+  .gallery-item::after{
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(180deg,transparent 50%,rgba(0,0,0,.6));
+    opacity:0; transition:.3s;
+  }
+  .gallery-item:hover::after{opacity:1}
+
+  /* ===== Мобильная адаптация ===== */
+  @media (max-width:980px){
+    .hero .wrap{grid-template-columns:1fr; gap:32px}
+    .illus{order:-1; width:min(400px,90%)}
+    .hero-cards{grid-template-columns:1fr}
+    .grid.cols-3{grid-template-columns:1fr 1fr}
+    .calc{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr 1fr; gap:24px}
+    .timeline{padding-left:32px}
+    .gallery{grid-template-columns:repeat(2,1fr)}
+  }
+  
+  @media (max-width:640px){
+    /* Мобильное меню */
+    .menu-toggle{display:block}
+    .navlinks{
+      position:fixed; top:0; left:-100%; width:100%; height:100vh;
+      background:rgba(255,255,255,.98); backdrop-filter:blur(10px);
+      flex-direction:column; justify-content:center; gap:24px;
+      padding:40px; transition:.4s left var(--ease-in-out);
+      z-index:1050;
+    }
+    .navlinks.active{left:0}
+    .navlinks a{font-size:24px; font-weight:700}
+    
+    /* Контент */
+    section{padding:40px 16px}
+    h1{font-size:clamp(28px,7vw,40px)}
+    h2{font-size:clamp(24px,6vw,32px)}
+    .hero-cards{grid-template-columns:1fr; gap:12px}
+    .grid.cols-3,.grid.cols-2{grid-template-columns:1fr}
+    .formgrid{grid-template-columns:1fr}
+    .tabs{padding:4px; gap:4px}
+    .tab{padding:10px 16px; font-size:14px}
+    .foot-grid{grid-template-columns:1fr}
+    .foot-bottom{flex-direction:column; text-align:center}
+    .mbar{display:flex}
+    .floating-cta{display:none}
+    .gallery{grid-template-columns:1fr}
+    
+    /* Упрощение элементов */
+    .chip{display:none}
+    .solar-panel{width:160px; height:110px}
+    .timeline{padding-left:24px}
+    .timeline::before{left:10px}
+    .timeline-dot{left:-18px; width:12px; height:12px}
+  }
+
+  /* ===== Принт ===== */
+  @media print{
+    header,.navlinks,.mbar,.ghost,.floating-cta,.illus,.wave,.controls-only,
+    .menu-toggle,.float-el,.social{display:none !important}
+    body{background:#fff}
+    section{padding:24px 0}
+    .card{box-shadow:none; border-color:#dfe7f3}
+    h1,h2,.price{-webkit-text-fill-color:var(--rs-blue) !important}
+  }
+
+  /* ===== Темная тема (опционально) ===== */
+  @media (prefers-color-scheme:dark){
+    /* Можно добавить поддержку темной темы */
+  }
+</style>
+</head>
+<body>
+
+<div class="scrollbar" id="scrollbar"></div>
+
+<!-- ===== Header ===== -->
+<header>
+  <nav class="nav">
+    <div class="logo">
+      <div class="mark" aria-hidden="true"></div>
+      <div>
+        <div style="line-height:1">АО «Россети Кубань»</div>
+        <small style="font-weight:700; color:#243042; opacity:.7">Нетарифные услуги</small>
+      </div>
+    </div>
+    
+    <button class="menu-toggle" id="menuToggle" aria-label="Меню">
+      <span></span><span></span><span></span>
+    </button>
+    
+    <div class="navlinks" id="navLinks">
+      <a href="#packs">Комплекты</a>
+      <a href="#calc">Калькулятор</a>
+      <a href="#process">Процесс</a>
+      <a href="#gallery">Примеры</a>
+      <a href="#faq">FAQ</a>
+      <a href="#lead" class="cta">Оставить заявку</a>
+    </div>
+    
+    <div style="display:flex; gap:8px" class="desktop-actions">
+      <button class="ghost" id="btnPrint" type="button">📄 Печать</button>
+      <a class="cta" href="#lead">Заявка</a>
+    </div>
+  </nav>
+</header>
+
+<!-- ===== Hero ===== -->
+<div class="hero">
+  <div class="float-el"></div>
+  <div class="float-el"></div>
+  
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">☀️ Солнечная микрогенерация • Комплекты под ключ</span>
+      <h1>Сетевые, гибридные и СБП-решения от <span style="color:var(--rs-accent)">Россети</span></h1>
+      <p class="lead">Полный цикл услуг: проектирование, оборудование Хевел, техприсоединение, монтаж и ввод в эксплуатацию. Официальная гарантия, профессиональный сервис.</p>
+      
+      <div class="hero-cards">
+        <div class="stat">
+          <div class="icon">⚡</div>
+          <div>
+            <div class="label">Сетевые комплекты</div>
+            <strong>от 226 090 ₽</strong>
+          </div>
+        </div>
+        <div class="stat">
+          <div class="icon">🔋</div>
+          <div>
+            <div class="label">Гибридные комплекты</div>
+            <strong>от 430 290 ₽</strong>
+          </div>
+        </div>
+        <div class="stat">
+          <div class="icon">🏠</div>
+          <div>
+            <div class="label">СБП-системы</div>
+            <strong>от 308 690 ₽</strong>
+          </div>
+        </div>
+      </div>
+      
+      <div style="display:flex; gap:12px; margin-top:24px; flex-wrap:wrap">
+        <a class="cta" href="#packs">🔍 Смотреть комплекты</a>
+        <a class="ghost" href="#calc">💰 Рассчитать проект</a>
+      </div>
+    </div>
+    
+    <div class="illus">
+      <div class="solar-panel">
+        <div class="solar-cell"></div>
+        <div class="solar-cell"></div>
+        <div class="solar-cell"></div>
+        <div class="solar-cell"></div>
+        <div class="solar-cell"></div>
+        <div class="solar-cell"></div>
+        <div class="solar-cell"></div>
+        <div class="solar-cell"></div>
+        <div class="solar-cell"></div>
+        <div class="solar-cell"></div>
+        <div class="solar-cell"></div>
+        <div class="solar-cell"></div>
+        <div class="solar-cell"></div>
+        <div class="solar-cell"></div>
+        <div class="solar-cell"></div>
+      </div>
+      <div class="chip"><span class="emoji">📐</span>Проектирование</div>
+      <div class="chip"><span class="emoji">📦</span>Поставка</div>
+      <div class="chip"><span class="emoji">🔧</span>Монтаж</div>
+      <div class="chip"><span class="emoji">✅</span>Ввод в эксплуатацию</div>
+    </div>
+  </div>
+
+  <!-- Волна -->
+  <svg class="wave" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,60 C240,120 480,0 720,60 C960,120 1200,0 1440,60 L1440,120 L0,120 Z" fill="url(#wave-gradient)"/>
+    <defs>
+      <linearGradient id="wave-gradient" x1="0" x2="1" y1="0" y2="0">
+        <stop offset="0%" stop-color="#e9f3ff"/>
+        <stop offset="50%" stop-color="#f0f9e8"/>
+        <stop offset="100%" stop-color="#ffffff"/>
+      </linearGradient>
+    </defs>
+  </svg>
+</div>
+
+<!-- ===== Преимущества ===== -->
+<section>
+  <h2>Почему выбирают Россети</h2>
+  <p class="sub">Мы не просто сетевая компания — мы ваш технологический партнёр в энергетике будущего</p>
+  
+  <div class="grid cols-3">
+    <div class="card benefit">
+      <div class="icon">🎯</div>
+      <div>
+        <h3>Единое окно</h3>
+        <p>Один договор на всё: от проекта до ввода в эксплуатацию. Никакой бюрократии.</p>
+      </div>
+    </div>
+    <div class="card benefit">
+      <div class="icon">⚡</div>
+      <div>
+        <h3>Гарантия подключения</h3>
+        <p>Мы владеем сетями — гарантируем техприсоединение и корректный учёт электроэнергии.</p>
+      </div>
+    </div>
+    <div class="card benefit">
+      <div class="icon">🛡️</div>
+      <div>
+        <h3>Официальная гарантия</h3>
+        <p>5 лет на оборудование, 2 года на монтаж. Сервисное обслуживание от производителя.</p>
+      </div>
+    </div>
+    <div class="card benefit">
+      <div class="icon">📊</div>
+      <div>
+        <h3>Прозрачный учёт</h3>
+        <p>Двунаправленные счётчики, личный кабинет, автоматическая передача данных в сбыт.</p>
+      </div>
+    </div>
+    <div class="card benefit">
+      <div class="icon">🚀</div>
+      <div>
+        <h3>Быстрая реализация</h3>
+        <p>От заявки до запуска — 45 дней. Четкие сроки на каждом этапе работ.</p>
+      </div>
+    </div>
+    <div class="card benefit">
+      <div class="icon">🌱</div>
+      <div>
+        <h3>Зелёная энергия</h3>
+        <p>Снижайте углеродный след, получайте зелёные сертификаты, продавайте излишки в сеть.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Комплекты ===== -->
+<section id="packs">
+  <h2>Готовые комплектные решения</h2>
+  <p class="sub">Проверенное оборудование от российского производителя Хевел. Цены указаны без учёта монтажа.</p>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="setev">⚡ Сетевые СЭС</button>
+    <button class="tab" data-tab="gibrid">🔋 Гибридные СЭС</button>
+    <button class="tab" data-tab="sbp">🏠 Системы БП</button>
+  </div>
+
+  <div class="grid cols-3" id="cards">
+    <!-- Карточки генерируются JS -->
+  </div>
+</section>
+
+<!-- ===== Калькулятор ===== -->
+<section id="calc">
+  <h2>Калькулятор солнечной электростанции</h2>
+  <p class="sub">Рассчитайте стоимость проекта «под ключ» и срок окупаемости для вашего объекта</p>
+
+  <div class="calc card">
+    <div class="controls-only">
+      <div class="field">
+        <label for="cat">🏷️ Тип системы</label>
+        <select id="cat" class="input">
+          <option value="setev">Сетевая СЭС (продажа в сеть)</option>
+          <option value="gibrid">Гибридная СЭС (с накопителем)</option>
+          <option value="sbp">Система БП (резервное питание)</option>
+        </select>
+      </div>
+      
+      <div class="field">
+        <label for="option">⚡ Комплектация</label>
+        <select id="option" class="input"></select>
+      </div>
+      
+      <div class="field">
+        <label>
+          <input type="checkbox" id="add_proj" class="checkbox" checked>
+          📐 Проект и техприсоединение
+          <span class="tooltip" data-tooltip="Включает проектирование, согласования, выпуск ТУ">ℹ️</span>
+        </label>
+        <input id="proj_cost" class="input" type="number" step="1000" value="45000" placeholder="Стоимость проекта">
+      </div>
+      
+      <div class="field">
+        <label for="mont_perc">🔧 Монтаж и материалы 
+          <span class="range-value" id="mont_val">15%</span>
+        </label>
+        <input id="mont_perc" type="range" min="10" max="25" step="1" value="15">
+      </div>
+      
+      <div class="field">
+        <label for="dist">📏 Расстояние до точки подключения
+          <span class="range-value" id="dist_val">15 м</span>
+        </label>
+        <input id="dist" type="range" min="0" max="100" step="5" value="15">
+      </div>
+      
+      <div class="field">
+        <label for="tariff">💰 Ваш тариф, ₽/кВт·ч</label>
+        <input id="tariff" class="input" type="number" step="0.1" value="6.0" placeholder="Тариф на электроэнергию">
+      </div>
+      
+      <div class="field">
+        <label for="specgen">☀️ Солнечная активность
+          <span class="tooltip" data-tooltip="Среднегодовая выработка на 1 кВт мощности в вашем регионе">ℹ️</span>
+        </label>
+        <select id="specgen" class="input">
+          <option value="1100">Северные регионы (1100 кВт·ч/кВт·год)</option>
+          <option value="1300" selected>Краснодарский край (1300 кВт·ч/кВт·год)</option>
+          <option value="1400">Южные регионы (1400 кВт·ч/кВт·год)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="calcout">
+      <div class="kpi"><div>📦 Оборудование</div><strong id="equip">— ₽</strong></div>
+      <div class="kpi"><div>📐 Проект и ТП</div><strong id="proj">— ₽</strong></div>
+      <div class="kpi"><div>🔧 Монтаж</div><strong id="mont">— ₽</strong></div>
+      <div class="kpi highlight"><div>💵 Итого под ключ</div><strong id="sum">— ₽</strong></div>
+      <div class="kpi"><div>⚡ Годовая выработка</div><strong id="gen">— кВт·ч</strong></div>
+      <div class="kpi"><div>💰 Экономия в год</div><strong id="save">— ₽/год</strong></div>
+      <div class="kpi highlight"><div>⏱️ Окупаемость</div><strong id="pp">— лет</strong></div>
+      
+      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:16px">
+        <a class="cta" href="#lead">📞 Получить точный расчёт</a>
+        <button class="ghost" type="button" onclick="window.print()">🖨️ Распечатать</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Процесс ===== -->
+<section id="process">
+  <h2>Как мы работаем</h2>
+  <p class="sub">Прозрачный процесс с контролем на каждом этапе. Средний срок реализации — 45 дней.</p>
+  
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-title">📋 Заявка и консультация</div>
+        <div class="timeline-desc">Заполните форму или позвоните. Инженер проконсультирует по мощности и комплектации для вашего объекта.</div>
+      </div>
+    </div>
+    
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-title">📐 Проектирование</div>
+        <div class="timeline-desc">Выезд на объект, проект электроснабжения, согласование в Россети, выпуск технических условий.</div>
+      </div>
+    </div>
+    
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-title">📦 Поставка оборудования</div>
+        <div class="timeline-desc">Комплектация: солнечные панели Хевел, инверторы, АКБ (для гибридных), крепления, кабели, защитная автоматика.</div>
+      </div>
+    </div>
+    
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-title">🔧 Монтаж и подключение</div>
+        <div class="timeline-desc">Установка панелей, сборка щита управления, прокладка кабелей, установка двунаправленного счётчика.</div>
+      </div>
+    </div>
+    
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-title">✅ Ввод в эксплуатацию</div>
+        <div class="timeline-desc">Пусконаладка, проверка работы, подключение к личному кабинету, настройка передачи данных в энергосбыт.</div>
+      </div>
+    </div>
+    
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-title">🛡️ Гарантия и сервис</div>
+        <div class="timeline-desc">Гарантийное обслуживание, удалённый мониторинг, консультации по продаже излишков электроэнергии.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Галерея ===== -->
+<section id="gallery">
+  <h2>Примеры реализованных проектов</h2>
+  <p class="sub">Более 500 объектов по Краснодарскому краю: частные дома, фермы, предприятия</p>
+  
+  <div class="gallery">
+    <div class="gallery-item">
+      <img src="data:image/svg+xml,%3Csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='400' height='300' fill='%23e8f4fd'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%230033A0' font-family='sans-serif' font-size='18' font-weight='bold'%3EЧастный дом 10 кВт%3C/text%3E%3C/svg%3E" alt="Частный дом">
+    </div>
+    <div class="gallery-item">
+      <img src="data:image/svg+xml,%3Csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='400' height='300' fill='%23f0f9e8'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%230033A0' font-family='sans-serif' font-size='18' font-weight='bold'%3EФермерское хозяйство 25 кВт%3C/text%3E%3C/svg%3E" alt="Ферма">
+    </div>
+    <div class="gallery-item">
+      <img src="data:image/svg+xml,%3Csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='400' height='300' fill='%23fff4e6'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%230033A0' font-family='sans-serif' font-size='18' font-weight='bold'%3EТорговый центр 50 кВт%3C/text%3E%3C/svg%3E" alt="ТЦ">
+    </div>
+    <div class="gallery-item">
+      <img src="data:image/svg+xml,%3Csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='400' height='300' fill='%23f3e8ff'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%230033A0' font-family='sans-serif' font-size='18' font-weight='bold'%3EПроизводство 100 кВт%3C/text%3E%3C/svg%3E" alt="Производство">
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section id="faq">
+  <h2>Частые вопросы</h2>
+  <div class="grid cols-2">
+    <details open>
+      <summary>Нужно ли разрешение на установку солнечных панелей?</summary>
+      <div class="ans">Для микрогенерации до 15 кВт разрешения не требуется. Мы берём на себя все согласования с сетевой компанией и выпуск технических условий. Вам нужно только подписать документы.</div>
+    </details>
+    
+    <details>
+      <summary>Можно ли продавать электроэнергию в сеть?</summary>
+      <div class="ans">Да, по закону о микрогенерации излишки выкупаются гарантирующим поставщиком по средневзвешенной цене оптового рынка. Мы настроим двунаправленный учёт и подключим к системе продаж.</div>
+    </details>
+    
+    <details>
+      <summary>Какая гарантия на оборудование?</summary>
+      <div class="ans">На солнечные панели Хевел — 5 лет официальной гарантии + 25 лет на сохранение 80% мощности. На инверторы — 5 лет. На АКБ — 3-5 лет в зависимости от типа. На монтаж — 2 года.</div>
+    </details>
+    
+    <details>
+      <summary>Работают ли панели зимой и в пасмурную погоду?</summary>
+      <div class="ans">Да, современные панели работают даже в облачную погоду, хотя и с меньшей эффективностью (20-50% от номинала). Зимой выработка снижается, но холод даже улучшает КПД панелей.</div>
+    </details>
+    
+    <details>
+      <summary>Нужно ли обслуживание?</summary>
+      <div class="ans">Минимальное: очистка от снега зимой и от пыли 1-2 раза в год. Мы предлагаем сервисные контракты с удалённым мониторингом и выездом специалистов.</div>
+    </details>
+    
+    <details>
+      <summary>Что входит в базовый монтаж?</summary>
+      <div class="ans">Установка опорных конструкций, монтаж панелей, прокладка DC/AC кабелей, сборка щита управления и защиты, установка и программирование инвертора, подключение заземления.</div>
+    </details>
+  </div>
+</section>
+
+<!-- ===== CTA-секция ===== -->
+<section style="background:linear-gradient(135deg,rgba(0,51,160,.04),rgba(0,174,239,.04)); border-radius:24px; margin:40px auto">
+  <div style="text-align:center">
+    <h2>Готовы перейти на солнечную энергию?</h2>
+    <p class="sub">Получите бесплатный расчёт для вашего объекта и узнайте точный срок окупаемости</p>
+    <a class="cta" href="#lead" style="font-size:18px; padding:16px 32px">
+      ☀️ Рассчитать мою экономию
+    </a>
+  </div>
+</section>
+
+<!-- ===== Форма ===== -->
+<section id="lead">
+  <h2>Оставьте заявку на расчёт</h2>
+  <p class="sub">Наш инженер свяжется с вами в течение 2 часов в рабочее время</p>
+  
+  <div class="card">
+    <form id="leadForm">
+      <div class="formgrid">
+        <div class="field">
+          <label>👤 Ваше имя</label>
+          <input class="input" name="name" placeholder="Иван Иванов" required>
+        </div>
+        <div class="field">
+          <label>📱 Телефон</label>
+          <input class="input" name="phone" type="tel" placeholder="+7 (9XX) XXX-XX-XX" required>
+        </div>
+      </div>
+      
+      <div class="formgrid">
+        <div class="field">
+          <label>📧 Email</label>
+          <input class="input" name="email" type="email" placeholder="ivan@example.com">
+        </div>
+        <div class="field">
+          <label>🏷️ Интересующий комплект</label>
+          <select class="input" name="pack">
+            <option>Выберите тип системы</option>
+            <option>Сетевая СЭС</option>
+            <option>Гибридная СЭС</option>
+            <option>Система БП</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="field">
+        <label>📍 Адрес объекта</label>
+        <input class="input" name="address" placeholder="г. Краснодар, ул. Солнечная, д. 1">
+      </div>
+      
+      <div class="field">
+        <label>💬 Комментарий</label>
+        <textarea class="input" name="comment" placeholder="Расскажите о вашем объекте: площадь крыши, среднемесячное потребление, особые требования..."></textarea>
+      </div>
+      
+      <label class="consent">
+        <input type="checkbox" class="checkbox" required>
+        Согласен на обработку персональных данных в соответствии с <a href="#" style="color:var(--rs-blue)">политикой конфиденциальности</a>
+      </label>
+      
+      <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center">
+        <button class="cta" type="submit">
+          <span class="spinner" style="display:none"></span>
+          📨 Отправить заявку
+        </button>
+        <button class="ghost" type="reset">Очистить форму</button>
+        <div id="formMsg" class="muted" style="margin-left:auto"></div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer>
+  <div class="foot">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap">
+      <div class="logo">
+        <div class="mark"></div>
+        <div>
+          <div>АО «Россети Кубань»</div>
+          <small style="opacity:.7">Солнечная микрогенерация</small>
+        </div>
+      </div>
+      <small style="color:var(--muted)">© 2025 АО «Россети Кубань». Все права защищены. Не является публичной офертой.</small>
+    </div>
+  </div>
+</footer>
+
+<!-- Мобильная панель -->
+<nav class="mbar" aria-label="Мобильная навигация">
+  <a href="#packs">
+    <span class="icon">📦</span>
+    <span>Пакеты</span>
+  </a>
+  <a href="#calc" class="active">
+    <span class="icon">💰</span>
+    <span>Расчёт</span>
+  </a>
+  <a href="#lead">
+    <span class="icon">📞</span>
+    <span>Заявка</span>
+  </a>
+  <a href="#faq">
+    <span class="icon">❓</span>
+    <span>FAQ</span>
+  </a>
+</nav>
+
+<a class="cta floating-cta" href="#lead">💬 Консультация</a>
+
+<script>
+  // ====== Конфигурация ======
+  const EMAIL_ADDRESSES = ["abusalimov@gmail.ru"];
+  
+  // EmailJS конфигурация (получите эти данные на https://www.emailjs.com/)
+  const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID"; // Замените на ваш Service ID
+  const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID"; // Замените на ваш Template ID
+  
+  // Google Apps Script endpoint
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby2D1kkxg6Vdv-1gESfwN9hqhBekC2uzSZp7bqrfIgCU7wZoQULiwjUuLWSqvfNX0w/exec";
+
+  // ====== Прайс-листы (из PDF) ======
+  const PRICES = {
+    setev: [
+      {kw:5,  phase:'1 фаза', price:226090, popular:true},
+      {kw:5,  phase:'3 фазы', price:239890},
+      {kw:10, phase:'3 фазы', price:391890, popular:true},
+      {kw:15, phase:'3 фазы', price:632590, popular:true},
+      {kw:25, phase:'3 фазы', price:887990},
+      {kw:50, phase:'3 фазы', price:1133790},
+      {kw:100,phase:'3 фазы', price:3293690}
+    ],
+    gibrid: [
+      {kw:5,  phase:'1 фаза', akb:5,  price:430290},
+      {kw:5,  phase:'1 фаза', akb:10, price:586990, popular:true},
+      {kw:8,  phase:'1 фаза', akb:10, price:775590},
+      {kw:8,  phase:'1 фаза', akb:15, price:932390, popular:true},
+      {kw:12, phase:'3 фазы', akb:10, price:942090},
+      {kw:12, phase:'3 фазы', akb:15, price:1082090, popular:true},
+      {kw:12, phase:'3 фазы', akb:20, price:1238790},
+      {kw:15, phase:'3 фазы', akb:15, price:1296890},
+      {kw:15, phase:'3 фазы', akb:20, price:1453590}
+    ],
+    sbp: [
+      {kw:5,  phase:'1 фаза', akb:5,  price:308690, popular:true},
+      {kw:5,  phase:'1 фаза', akb:10, price:465390},
+      {kw:8,  phase:'1 фаза', akb:10, price:578990, popular:true},
+      {kw:8,  phase:'1 фаза', akb:15, price:735690},
+      {kw:12, phase:'3 фазы', akb:10, price:630490},
+      {kw:12, phase:'3 фазы', akb:15, price:787090, popular:true},
+      {kw:12, phase:'3 фазы', akb:20, price:943890},
+      {kw:15, phase:'3 фазы', akb:15, price:932590},
+      {kw:15, phase:'3 фазы', akb:20, price:1089290}
+    ]
+  };
+
+  // ====== Хелперы ======
+  const $ = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
+  const money = n => n.toLocaleString('ru-RU');
+  const clamp = (x,min,max) => Math.min(max,Math.max(min,x));
+
+  // ====== Прогресс-бар ======
+  const scrollbar = $('#scrollbar');
+  function updateScrollProgress() {
+    const h = document.documentElement;
+    const progress = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    scrollbar.style.width = progress + '%';
+  }
+  window.addEventListener('scroll', updateScrollProgress, {passive:true});
+  updateScrollProgress();
+
+  // ====== Плавная прокрутка ======
+  $$('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      const href = link.getAttribute('href');
+      if (href && href.length > 1) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const offset = 80; // Отступ от хедера
+          const top = target.offsetTop - offset;
+          window.scrollTo({top, behavior:'smooth'});
+          
+          // Закрыть мобильное меню
+          $('#navLinks').classList.remove('active');
+          $('#menuToggle').classList.remove('active');
+        }
+      }
+    });
+  });
+
+  // ====== Мобильное меню ======
+  const menuToggle = $('#menuToggle');
+  const navLinks = $('#navLinks');
+  menuToggle?.addEventListener('click', () => {
+    menuToggle.classList.toggle('active');
+    navLinks.classList.toggle('active');
+  });
+
+  // ====== Intersection Observer для анимаций ======
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('_in');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {threshold: 0.1});
+
+  $$('.card, .stat, .timeline-item').forEach(el => observer.observe(el));
+
+  // ====== Табы и карточки комплектов ======
+  const cards = $('#cards');
+  const tabs = $$('.tab');
+  let activeTab = 'setev';
+
+  function renderCards() {
+    const data = PRICES[activeTab];
+    const popular = data.filter(r => r.popular).slice(0, 3);
+    const items = popular.length >= 3 ? popular : data.slice(0, 3);
+    
+    cards.innerHTML = items.map((r, i) => {
+      const type = activeTab === 'setev' ? 'Сетевая СЭС' : 
+                   activeTab === 'gibrid' ? 'Гибридная СЭС' : 'Система БП';
+      const icon = activeTab === 'setev' ? '⚡' : 
+                   activeTab === 'gibrid' ? '🔋' : '🏠';
+      
+      return `
+        <div class="card pack">
+          ${r.popular ? '<div class="badge">🔥 Популярный выбор</div>' : `<div class="badge">${type}</div>`}
+          <div class="title">${icon} ${r.kw} кВт • ${r.phase}${r.akb ? ` • АКБ ${r.akb} кВт·ч` : ''}</div>
+          <div class="price">${money(r.price)} ₽</div>
+          <ul class="list">
+            <li>
+              <div class="check">✓</div>
+              <div>${activeTab !== 'sbp' ? 'Солнечные панели Хевел' : 'Инвертор и АКБ'}</div>
+            </li>
+            <li>
+              <div class="check">✓</div>
+              <div>${activeTab === 'setev' ? 'Сетевой инвертор' : 
+                      activeTab === 'gibrid' ? 'Гибридный инвертор' : 'Источник бесперебойного питания'}</div>
+            </li>
+            <li>
+              <div class="check">✓</div>
+              <div>Кабели и защитная автоматика</div>
+            </li>
+            ${r.akb ? '<li><div class="check">✓</div><div>Литиевые аккумуляторы</div></li>' : ''}
+          </ul>
+          
+          <details ${i === 0 ? 'open' : ''}>
+            <summary>Все комплектации ${type}</summary>
+            <div class="ans">
+              <table style="width:100%; font-size:14px; margin-top:12px">
+                <thead>
+                  <tr style="border-bottom:1px solid var(--border)">
+                    <th style="padding:8px; text-align:left">Мощность</th>
+                    <th style="padding:8px; text-align:left">Фазность</th>
+                    ${activeTab !== 'setev' ? '<th style="padding:8px; text-align:left">АКБ</th>' : ''}
+                    <th style="padding:8px; text-align:right">Цена</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${PRICES[activeTab].map(x => `
+                    <tr style="border-bottom:1px solid var(--border)">
+                      <td style="padding:8px">${x.kw} кВт</td>
+                      <td style="padding:8px">${x.phase}</td>
+                      ${activeTab !== 'setev' ? `<td style="padding:8px">${x.akb} кВт·ч</td>` : ''}
+                      <td style="padding:8px; text-align:right; font-weight:700">${money(x.price)} ₽</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </details>
+          
+          <div class="actions" style="margin-top:16px; display:flex; gap:12px">
+            <a class="cta" href="#calc" data-cat="${activeTab}" data-idx="${i}">
+              💰 Рассчитать проект
+            </a>
+            <a class="ghost" href="#lead">📞 Заказать</a>
+          </div>
+          
+          <div class="note" style="margin-top:12px; font-size:13px; color:var(--muted)">
+            * Цена без монтажа, опорных конструкций и автоматических выключателей
+          </div>
+        </div>
+      `;
+    }).join('');
+    
+    // Обработчики для кнопок
+    $$('a[data-cat]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cat = btn.getAttribute('data-cat');
+        const idx = btn.getAttribute('data-idx');
+        $('#cat').value = cat;
+        populateOptions();
+        if (idx !== null) $('#option').value = idx;
+        estimate();
+      });
+    });
+    
+    // Ре-анимация
+    $$('.card.pack').forEach(el => {
+      el.classList.remove('_in');
+      observer.observe(el);
+    });
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      activeTab = tab.getAttribute('data-tab');
+      renderCards();
+    });
+  });
+  
+  renderCards();
+
+  // ====== Калькулятор ======
+  const controls = {
+    cat: $('#cat'),
+    option: $('#option'),
+    addProj: $('#add_proj'),
+    projCost: $('#proj_cost'),
+    montPerc: $('#mont_perc'),
+    dist: $('#dist'),
+    tariff: $('#tariff'),
+    specgen: $('#specgen')
+  };
+  
+  const outputs = {
+    equip: $('#equip'),
+    proj: $('#proj'),
+    mont: $('#mont'),
+    sum: $('#sum'),
+    gen: $('#gen'),
+    save: $('#save'),
+    pp: $('#pp')
+  };
+
+  // Обновление значений слайдеров
+  $('#mont_perc').addEventListener('input', e => {
+    $('#mont_val').textContent = e.target.value + '%';
+  });
+  $('#dist').addEventListener('input', e => {
+    $('#dist_val').textContent = e.target.value + ' м';
+  });
+
+  function populateOptions() {
+    const cat = controls.cat.value;
+    const arr = PRICES[cat] || [];
+    controls.option.innerHTML = arr.map((r, i) => {
+      const label = cat === 'setev' 
+        ? `${r.kw} кВт • ${r.phase} — ${money(r.price)} ₽`
+        : `${r.kw} кВт • ${r.phase} • АКБ ${r.akb} кВт·ч — ${money(r.price)} ₽`;
+      return `<option value="${i}">${label}</option>`;
+    }).join('');
+    
+    // Рекомендуемый процент монтажа
+    controls.montPerc.value = cat === 'setev' ? 15 : 18;
+    $('#mont_val').textContent = controls.montPerc.value + '%';
+    estimate();
+  }
+
+  function estimate() {
+    const cat = controls.cat.value;
+    const arr = PRICES[cat] || [];
+    const idx = parseInt(controls.option.value) || 0;
+    const item = arr[idx];
+    
+    if (!item) return;
+    
+    const equip = item.price;
+    const proj = controls.addProj.checked ? Math.max(0, +controls.projCost.value || 0) : 0;
+    const montPerc = Math.max(0, +controls.montPerc.value || 0) / 100;
+    const dist = Math.max(0, +controls.dist.value || 0);
+    
+    // Монтаж: процент от оборудования + кабельная трасса
+    const cablePrice = 250; // ₽/м примерная стоимость
+    const mont = Math.round(equip * montPerc + dist * cablePrice);
+    const total = equip + proj + mont;
+    
+    outputs.equip.textContent = money(equip) + ' ₽';
+    outputs.proj.textContent = money(proj) + ' ₽';
+    outputs.mont.textContent = money(mont) + ' ₽';
+    outputs.sum.textContent = money(total) + ' ₽';
+    
+    // Выработка и окупаемость
+    const kw = item.kw;
+    const specGen = +controls.specgen.value || 1300;
+    const yearGen = kw * specGen;
+    const tariff = Math.max(1, +controls.tariff.value || 6.0);
+    const yearSave = yearGen * tariff;
+    const payback = yearSave > 0 ? total / yearSave : 0;
+    
+    outputs.gen.textContent = money(Math.round(yearGen)) + ' кВт·ч';
+    outputs.save.textContent = money(Math.round(yearSave)) + ' ₽/год';
+    outputs.pp.textContent = payback > 0 ? payback.toFixed(1) + ' лет' : '—';
+    
+    // Сохранение в localStorage
+    const config = {
+      cat,
+      idx,
+      addProj: controls.addProj.checked,
+      projCost: +controls.projCost.value,
+      montPerc: +controls.montPerc.value,
+      dist: +controls.dist.value,
+      tariff: +controls.tariff.value,
+      specgen: +controls.specgen.value
+    };
+    localStorage.setItem('solar_calc', JSON.stringify(config));
+  }
+
+  // События калькулятора
+  Object.values(controls).forEach(control => {
+    control.addEventListener('input', estimate);
+    control.addEventListener('change', estimate);
+  });
+
+  // Восстановление сохраненных значений
+  try {
+    const saved = JSON.parse(localStorage.getItem('solar_calc') || 'null');
+    if (saved) {
+      controls.cat.value = saved.cat || 'setev';
+      populateOptions();
+      controls.option.value = saved.idx || 0;
+      controls.addProj.checked = saved.addProj ?? true;
+      controls.projCost.value = saved.projCost ?? 45000;
+      controls.montPerc.value = saved.montPerc ?? 15;
+      controls.dist.value = saved.dist ?? 15;
+      controls.tariff.value = saved.tariff ?? 6.0;
+      controls.specgen.value = saved.specgen ?? 1300;
+      
+      $('#mont_val').textContent = controls.montPerc.value + '%';
+      $('#dist_val').textContent = controls.dist.value + ' м';
+    }
+  } catch {
+    populateOptions();
+  }
+  
+  populateOptions();
+
+  // ====== Печать ======
+  $('#btnPrint')?.addEventListener('click', () => window.print());
+
+  // ====== Форма ======
+  const form = $('#leadForm');
+  const formMsg = $('#formMsg');
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const spinner = submitBtn.querySelector('.spinner');
+  
+  // Вариант 1: Отправка через EmailJS
+  async function sendViaEmailJS(fields) {
+    if (!EMAILJS_SERVICE_ID || EMAILJS_SERVICE_ID === "YOUR_SERVICE_ID") {
+      throw new Error('EmailJS не настроен');
+    }
+    
+    const templateParams = {
+      to_email: EMAIL_ADDRESSES.join(','), // Отправка на оба адреса
+      from_name: fields.name,
+      from_email: fields.email || 'не указан',
+      phone: fields.phone,
+      address: fields.address || 'не указан',
+      pack_type: fields.pack || 'не выбран',
+      comment: fields.comment || 'без комментария',
+      date: new Date().toLocaleString('ru-RU')
+    };
+    
+    return emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+  }
+  
+  // Вариант 2: Отправка через Google Apps Script
+  async function sendViaGoogleScript(fields) {
+    if (!GOOGLE_SCRIPT_URL) {
+      throw new Error('Google Script не настроен');
+    }
+    
+    const data = {
+      emails: EMAIL_ADDRESSES,
+      subject: 'Заявка: Солнечная микрогенерация',
+      name: fields.name,
+      phone: fields.phone,
+      email: fields.email || '',
+      address: fields.address || '',
+      pack: fields.pack || '',
+      comment: fields.comment || '',
+      date: new Date().toLocaleString('ru-RU')
+    };
+    
+    const res = await fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    
+    // no-cors не возвращает ответ, считаем успешным
+    return {ok: true};
+  }
+  
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // UI feedback
+    spinner.style.display = 'inline-block';
+    submitBtn.disabled = true;
+    formMsg.textContent = '';
+    
+    const data = new FormData(form);
+    const fields = Object.fromEntries(data.entries());
+    
+    const message = [
+      '☀️ <b>Новая заявка: Солнечная микрогенерация</b>',
+      '',
+      `👤 <b>Имя:</b> ${fields.name || '—'}`,
+      `📱 <b>Телефон:</b> ${fields.phone || '—'}`,
+      `📧 <b>Email:</b> ${fields.email || '—'}`,
+      `📍 <b>Адрес:</b> ${fields.address || '—'}`,
+      `🏷️ <b>Комплект:</b> ${fields.pack || '—'}`,
+      `💬 <b>Комментарий:</b> ${fields.comment || '—'}`,
+      '',
+      `⏰ <b>Время:</b> ${new Date().toLocaleString('ru-RU')}`
+    ].join('\n');
+    
+    try {
+      // Попробуем отправить через EmailJS
+      if (EMAILJS_SERVICE_ID && EMAILJS_SERVICE_ID !== "YOUR_SERVICE_ID") {
+        await sendViaEmailJS(fields);
+        formMsg.textContent = '✅ Заявка отправлена на email! Мы свяжемся с вами в ближайшее время.';
+        formMsg.style.color = 'var(--ok)';
+        form.reset();
+        submitBtn.innerHTML = '✅ Отправлено!';
+      } 
+      // Или через Google Apps Script
+      else if (GOOGLE_SCRIPT_URL) {
+        await sendViaGoogleScript(fields);
+        formMsg.textContent = '✅ Заявка отправлена! Мы свяжемся с вами в ближайшее время.';
+        formMsg.style.color = 'var(--ok)';
+        form.reset();
+        submitBtn.innerHTML = '✅ Отправлено!';
+      } 
+      // Fallback на mailto
+      else {
+        const subject = 'Заявка: Солнечная микрогенерация';
+        const body = message.replace(/<[^>]+>/g, '').replace(/\n/g, '%0D%0A');
+        const emailList = EMAIL_ADDRESSES.join(',');
+        const mailto = `mailto:${emailList}?subject=${encodeURIComponent(subject)}&body=${body}`;
+        
+        window.location.href = mailto;
+        formMsg.textContent = '📧 Открываю почтовый клиент для отправки...';
+        formMsg.style.color = 'var(--warn)';
+      }
+      
+      setTimeout(() => {
+        submitBtn.innerHTML = '📨 Отправить заявку';
+      }, 3000);
+      
+    } catch (err) {
+      console.error('Ошибка отправки:', err);
+      // Fallback на mailto при любой ошибке
+      const subject = 'Заявка: Солнечная микрогенерация';
+      const body = message.replace(/<[^>]+>/g, '').replace(/\n/g, '%0D%0A');
+      const emailList = EMAIL_ADDRESSES.join(',');
+      const mailto = `mailto:${emailList}?subject=${encodeURIComponent(subject)}&body=${body}`;
+      
+      window.location.href = mailto;
+      formMsg.textContent = '📧 Открываю почтовый клиент для отправки...';
+      formMsg.style.color = 'var(--warn)';
+    } finally {
+      spinner.style.display = 'none';
+      submitBtn.disabled = false;
+    }
+  });
+
+  // ====== Активная ссылка в мобильном меню ======
+  const mbarLinks = $('.mbar a');
+  function updateActiveSection() {
+    const sections = ['#packs', '#calc', '#lead', '#faq'];
+    const scrollPos = window.scrollY + 100;
+    
+    sections.forEach((id, idx) => {
+      const section = $(id);
+      if (section) {
+        const top = section.offsetTop;
+        const height = section.offsetHeight;
+        
+        if (scrollPos >= top && scrollPos < top + height) {
+          mbarLinks.forEach(link => link.classList.remove('active'));
+          if (mbarLinks[idx]) mbarLinks[idx].classList.add('active');
+        }
+      }
+    });
+  }
+  
+  window.addEventListener('scroll', updateActiveSection, {passive: true});
+  updateActiveSection();
+
+  // ====== Анимация чипов при наведении на иллюстрацию ======
+  const illus = $('.illus');
+  const chips = illus?.querySelectorAll('.chip');
+  
+  illus?.addEventListener('mouseenter', () => {
+    chips?.forEach((chip, i) => {
+      setTimeout(() => {
+        chip.style.transform = 'scale(1.1)';
+      }, i * 100);
+    });
+  });
+  
+  illus?.addEventListener('mouseleave', () => {
+    chips?.forEach(chip => {
+      chip.style.transform = '';
+    });
+  });
+
+  // ====== Счетчики анимация ======
+  function animateValue(el, start, end, duration) {
+    const range = end - start;
+    const startTime = Date.now();
+    
+    const timer = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const value = Math.floor(start + range * progress);
+      
+      el.textContent = money(value) + ' ₽';
+      
+      if (progress >= 1) clearInterval(timer);
+    }, 16);
+  }
+
+  // Анимация при появлении hero-cards
+  const heroObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const priceEls = entry.target.querySelectorAll('strong');
+        priceEls.forEach(el => {
+          const text = el.textContent.replace(/[^\d]/g, '');
+          const value = parseInt(text) || 0;
+          if (value > 0) {
+            animateValue(el, 0, value, 1000);
+          }
+        });
+        heroObserver.unobserve(entry.target);
+      }
+    });
+  }, {threshold: 0.5});
+
+  $('.hero-cards .stat').forEach(el => heroObserver.observe(el));
+
+  // ====== Параллакс эффект для hero ======
+  let ticking = false;
+  function updateParallax() {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const scrolled = window.pageYOffset;
+        const speed = 0.5;
+        
+        // Двигаем фоновые элементы
+        const floatEls = $('.float-el');
+        floatEls.forEach((el, i) => {
+          const yPos = -(scrolled * speed * (i + 1) * 0.3);
+          el.style.transform = `translateY(${yPos}px)`;
+        });
+        
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+  
+  window.addEventListener('scroll', updateParallax, {passive: true});
+
+  // ====== Предзагрузка изображений ======
+  const imagesToPreload = [
+    '/images/solar-panel-1.jpg',
+    '/images/solar-panel-2.jpg',
+    '/images/installation-1.jpg',
+    '/images/installation-2.jpg'
+  ];
+  
+  imagesToPreload.forEach(src => {
+    const img = new Image();
+    img.src = src;
+  });
+
+  // ====== PWA: Регистрация Service Worker (опционально) ======
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(() => {
+        // Игнорируем ошибки, SW опционален
+      });
+    });
+  }
+
+  // ====== Метрика для отслеживания конверсий ======
+  function trackEvent(action, category = 'engagement', label = '') {
+    // Здесь можно добавить Google Analytics, Яндекс.Метрику и т.д.
+    console.log('Event:', {action, category, label});
+    
+    // Пример для GA4
+    if (typeof gtag !== 'undefined') {
+      gtag('event', action, {
+        event_category: category,
+        event_label: label
+      });
+    }
+  }
+
+  // Отслеживание важных действий
+  $('.cta').forEach(btn => {
+    btn.addEventListener('click', () => {
+      trackEvent('cta_click', 'conversion', btn.textContent);
+    });
+  });
+
+  form?.addEventListener('submit', () => {
+    trackEvent('form_submit', 'conversion', 'lead_form');
+  });
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      trackEvent('tab_switch', 'engagement', tab.textContent);
+    });
+  });
+
+  // ====== Оптимизация производительности ======
+  // Debounce для ресурсоемких операций
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+
+  // Throttle для событий прокрутки
+  function throttle(func, limit) {
+    let inThrottle;
+    return function(...args) {
+      if (!inThrottle) {
+        func.apply(this, args);
+        inThrottle = true;
+        setTimeout(() => inThrottle = false, limit);
+      }
+    };
+  }
+
+  // Оптимизированные обработчики
+  const optimizedScroll = throttle(updateActiveSection, 100);
+  window.addEventListener('scroll', optimizedScroll, {passive: true});
+
+  // ====== Доступность (A11Y) ======
+  // Управление фокусом для мобильного меню
+  menuToggle?.addEventListener('click', () => {
+    if (navLinks.classList.contains('active')) {
+      const firstLink = navLinks.querySelector('a');
+      firstLink?.focus();
+    }
+  });
+
+  // Escape закрывает мобильное меню
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+      navLinks.classList.remove('active');
+      menuToggle.classList.remove('active');
+      menuToggle.focus();
+    }
+  });
+
+  // ====== Финальная инициализация ======
+  console.log('🌟 Сайт Россети Кубань - Солнечная микрогенерация');
+  console.log('💡 Версия: 2.0.0');
+  console.log('📧 Email для заявок: abusalimov@gmail.ru');
+
+/* 
+====== КОД ДЛЯ GOOGLE APPS SCRIPT (ВАРИАНТ 2) ======
+
+Если вы хотите использовать бесплатное решение через Google:
+
+1. Откройте https://script.google.com/
+2. Создайте новый проект
+3. Вставьте следующий код:
+
+function doPost(e) {
+  try {
+    const data = JSON.parse(e.postData.contents);
+    
+    // Email адрес получателя
+    const recipients = 'abusalimov@gmail.ru';
+    
+    // Формирование письма
+    const subject = data.subject || 'Новая заявка с сайта';
+    const htmlBody = `
+      <h2>Новая заявка: Солнечная микрогенерация</h2>
+      <table style="border-collapse: collapse; width: 100%;">
+        <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Имя:</strong></td><td style="padding: 8px; border: 1px solid #ddd;">${data.name}</td></tr>
+        <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Телефон:</strong></td><td style="padding: 8px; border: 1px solid #ddd;">${data.phone}</td></tr>
+        <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Email:</strong></td><td style="padding: 8px; border: 1px solid #ddd;">${data.email || 'не указан'}</td></tr>
+        <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Адрес объекта:</strong></td><td style="padding: 8px; border: 1px solid #ddd;">${data.address || 'не указан'}</td></tr>
+        <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Тип комплекта:</strong></td><td style="padding: 8px; border: 1px solid #ddd;">${data.pack || 'не выбран'}</td></tr>
+        <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Комментарий:</strong></td><td style="padding: 8px; border: 1px solid #ddd;">${data.comment || 'отсутствует'}</td></tr>
+        <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Дата заявки:</strong></td><td style="padding: 8px; border: 1px solid #ddd;">${data.date}</td></tr>
+      </table>
+    `;
+    
+    // Отправка email
+    GmailApp.sendEmail(recipients, subject, '', {
+      htmlBody: htmlBody,
+      name: 'Сайт Россети Кубань'
+    });
+    
+    return ContentService.createTextOutput('OK');
+  } catch (error) {
+    console.error(error);
+    return ContentService.createTextOutput('ERROR');
+  }
+}
+
+4. Сохраните проект
+5. Нажмите "Развернуть" > "Новое развертывание"
+6. Выберите тип "Веб-приложение"
+7. Установите "Кто имеет доступ" = "Все"
+8. Скопируйте URL развертывания
+9. Вставьте URL в переменную GOOGLE_SCRIPT_URL в начале этого файла
+
+====== КОНЕЦ КОДА GOOGLE APPS SCRIPT ======
+*/
+</script>
+
+</body>
+</html>
